@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>body{margin:0}[hidden]{display:none!important}</style>
-</head>
-<body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Merry Killmas Board</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,6 +83,8 @@ body.paused .time{opacity:.72}
 .adj{grid-row:1/3;grid-column:3;display:flex;flex-direction:column;gap:.45rem}
 .adj .gm{width:3.4rem;height:3.4rem;padding:0;justify-content:center;font-size:1.9rem;font-weight:500;border-radius:50%;line-height:1}
 .adj .gm.plus{border-color:var(--straw-dim)}
+.gm.big{font-size:1.25rem;padding:.8rem 1.6rem}
+.bellicon.still{animation:none;opacity:.55}
 .ovbtns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.6rem}
 #blackout .gm{position:absolute;bottom:1.5rem;right:max(16px,env(safe-area-inset-right,0px));background:#080808;border-color:#1a1a1a;color:#3a3a3a}
 .track{position:relative;height:.7rem;margin-top:2.6rem;background:var(--night-3);border-radius:99rem;border:1px solid var(--line)}
@@ -303,7 +298,8 @@ body.ctl #app{display:block;padding:0}
       </div>
       <p class="dom" id="cDom" hidden>Judge!</p>
       <p class="hint" id="cHint">No kills, no sabotage, nothing moves until the trial is over. Ghosts stay silent.</p>
-      <div class="ovbtns">
+      <div class="ovbtns"><button class="gm bellb big" id="cBellBtn" type="button"><svg><use href="#i-bell"/></svg><span id="cBellTxt">Stoppa klockan</span></button></div>
+      <div class="ovbtns" style="margin-top:.8rem">
         <button class="gm" type="button" aria-label="Domstolen klar, en tjänare utröstad" data-a='{"t":"courtEnd","out":"followers"}'>Tjänare utröstad</button>
         <button class="gm" type="button" aria-label="Domstolen klar, en nisse utröstad" data-a='{"t":"courtEnd","out":"dead"}'>Nisse utröstad</button>
         <button class="gm" type="button" data-a='{"t":"courtEnd"}'>Ingen utröstad</button>
@@ -356,7 +352,7 @@ body.ctl #app{display:block;padding:0}
       <button class="btn warn wide" type="button" data-a='{"t":"court"}'>Ring till domstol nu</button>
       <button class="btn wide" type="button" data-a='{"t":"courtEnd"}'>Avsluta domstol</button>
     </div>
-    <label class="check"><input type="checkbox" id="cfgPause"> <span>Pausa klocka och musik under domstolen<br><span class="muted">Av: klockan och ljudfilen rullar vidare, som en 60-minutersfil med klocka var 15:e minut förutsätter.</span></span></label>
+    <label class="check"><input type="checkbox" id="cfgPause"> <span>Pausa nedräkningen under domstolen<br><span class="muted">Musiken fortsätter dämpad i båda fallen.</span></span></label>
 
     <h3>Händelser</h3>
     <div class="row">
@@ -370,21 +366,15 @@ body.ctl #app{display:block;padding:0}
     </div>
 
     <h3>Ljud</h3>
+    <div class="live"><b id="pTrack" style="font-family:var(--f-ui);font-size:15px">Loop 2 · Episk</b><span id="pTrackT"></span></div>
+    <p class="muted">Slingorna spelas i ordningen Loop 2 Episk, Loop 4 Smyg och spaning, Loop 3 Synthwave och börjar sedan om. I domstolsläget sänks musiken automatiskt och klockan ringer tills ni stoppar den.</p>
     <div class="row">
-      <label class="btn pri wide" for="audioFile" style="text-align:center">Välj ljudfil (60 min)</label>
-      <input id="audioFile" type="file" accept="audio/*" hidden>
-      <button class="btn" type="button" data-a='{"t":"audioClear"}'>Ta bort</button>
-    </div>
-    <p class="file" id="pFile">Ingen ljudfil vald. Inbyggd stämningsmusik spelas i stället.</p>
-    <div class="field"><label for="cfgVol">Volym</label><input id="cfgVol" type="range" min="0" max="1" step="0.05"></div>
-    <div class="field"><label for="cfgBell">Inbyggd domstolsklocka</label>
-      <select id="cfgBell"><option value="auto">Auto</option><option value="on">Alltid</option><option value="off">Aldrig</option></select></div>
-    <p class="muted">Auto: klockan ringer när ingen ljudfil är laddad, eller när klockan pausas under domstol.</p>
-    <label class="check"><input type="checkbox" id="cfgAmb"> <span>Inbyggd stämningsmusik när ingen fil är laddad</span></label>
-    <div class="row">
+      <button class="btn" type="button" data-a='{"t":"nextTrack"}'>Nästa slinga</button>
       <button class="btn" type="button" data-a='{"t":"bell"}'>Testa klockan</button>
       <button class="btn" type="button" id="pMute" data-a='{"t":"mute"}'>Stäng av ljud</button>
     </div>
+    <div class="field"><label for="cfgVol">Volym</label><input id="cfgVol" type="range" min="0" max="1" step="0.05"></div>
+    <label class="check"><input type="checkbox" id="cfgAmb"> <span>Inbyggd stämningsmusik om ljudfilerna inte hittas</span></label>
 
     <h3>Inställningar</h3>
     <div class="field"><label for="cfgTotal">Speltid (min)</label><input id="cfgTotal" type="number" min="5" max="180" step="5"></div>
@@ -430,8 +420,7 @@ function win(who,why){setClock(false,elapsed());S.court=null;S.finale={who,why};
 function startCourt(k){
   const e=elapsed(),n=nCourts(),final=k!=null&&k>=n;let resume=false;
   if(S.cfg.pauseCourt||final){resume=S.clock.running&&!final;setClock(false,k!=null?mark(k):e);}
-  S.court={k,n,final,startedAt:Date.now(),resume};
-  const m=S.cfg.bell; if(m==='on'||(m==='auto'&&(!audioReady||S.cfg.pauseCourt)))ringBell(3);
+  S.court={k,n,final,startedAt:Date.now(),resume,bell:true};
 }
 function reduce(a){
   const now=Date.now(),e=elapsed(now);
@@ -439,9 +428,9 @@ function reduce(a){
     case 'toggle':
       if(S.finale&&S.finale.who)return;
       if(S.clock.running)setClock(false,e);
-      else if(e<totalMs()){setClock(true,e);if(S.court&&S.court.resume)S.court=null;if(S.finale)S.finale=null;}
+      else if(e<totalMs()){ctx();setClock(true,e);if(S.court&&S.court.resume)S.court=null;if(S.finale)S.finale=null;}
       break;
-    case 'reset':S=fresh(S.cfg);break;
+    case 'reset':S=fresh(S.cfg);musicReset();break;
     case 'adjust':{const ne=Math.max(0,Math.min(totalMs(),e+a.ms));setClock(S.clock.running&&ne<totalMs(),ne);
       S.courts=[];for(let k=1;k<=nCourts();k++)if(mark(k)<ne||(mark(k)===ne&&S.court&&S.court.k===k))S.courts.push(k);break;}
     case 'count':{const c=S.counts,k=a.k,lim={dead:99,followers:S.cfg.followers,presents:S.cfg.goal}[k],before=c[k];
@@ -465,7 +454,9 @@ function reduce(a){
       setClock(S.clock.running,Math.min(e,totalMs()));marksKey='';break;}
     case 'bell':ringBell(3);return;
     case 'mute':muted=!muted;syncAudio();render();broadcast();return;
-    case 'audioClear':clearAudio();return;
+    case 'bellStop':if(!S.court)return;S.court.bell=false;break;
+    case 'bellStart':if(!S.court)return;S.court.bell=true;break;
+    case 'nextTrack':nextTrack();return;
     default:return;
   }
   commit();
@@ -473,47 +464,72 @@ function reduce(a){
 function commit(){save();syncAudio();render();broadcast();}
 const dispatch=a=>{if(isCtl){try{window.opener.postMessage({kmas:'act',a},'*')}catch(e){}}else reduce(a);};
 
-/* ---------- audio ---------- */
-const audio=new Audio();audio.preload='auto';audio.loop=false;
-let audioName='',audioReady=false,muted=false,needGesture=false,playPending=false,remote=null;
-audio.addEventListener('loadedmetadata',()=>{audioReady=true;syncAudio();render();broadcast();});
-audio.addEventListener('error',()=>{if(audio.getAttribute('src')){audioReady=false;if(audioName.indexOf('(från mappen)')>-1)audioName='';render();broadcast();}});
-function loadAudioFile(file,persist=true){if(!file)return;try{if(audio.src&&audio.src.startsWith('blob:'))URL.revokeObjectURL(audio.src)}catch(e){}
-  audioReady=false;audioName=file.name;audio.src=URL.createObjectURL(file);audio.load();if(persist){idbPut(file);toast('Ljudfil laddad: '+file.name);}render();broadcast();}
-function clearAudio(){audio.pause();audio.removeAttribute('src');audio.load();audioReady=false;audioName='';idbDel();syncAudio();render();broadcast();toast('Ljudfilen är borttagen');}
+/* ---------- audio: three music loops in a fixed order, ducked during trials, bell on top ---------- */
+const TRACKS=[{src:'loop2-episk.mp3',name:'Loop 2 · Episk'},{src:'loop4-smyg-och-spaning.mp3',name:'Loop 4 · Smyg och spaning'},{src:'loop3-synthwave.mp3',name:'Loop 3 · Synthwave'}];
+const DUCK=0.2, MKEY='killmas-music-v1';
+let muted=false,needGesture=false,playPending=false,remote=null,audioOk=true,startedOnce=false,duckLevel=1;
+let mus={i:0,t:0};try{const m=JSON.parse(localStorage.getItem(MKEY)||'null');if(m&&typeof m.i==='number'&&m.i>=0&&m.i<TRACKS.length)mus={i:m.i,t:+m.t||0};}catch(e){}
+const saveMus=()=>{try{localStorage.setItem(MKEY,JSON.stringify(mus))}catch(e){}};
+const players=[new Audio(),new Audio()];let cur=0,advancing=false;
+const trackSrc=i=>TRACKS[((i%TRACKS.length)+TRACKS.length)%TRACKS.length].src;
+function prep(p,i){const s=trackSrc(i);if(p.dataset.src!==s){p.dataset.src=s;p.preload='auto';p.src=s;p.load();}}
+if(!isCtl){prep(players[0],mus.i);prep(players[1],mus.i+1);}
+const vol=()=>Math.max(0,Math.min(1,S.cfg.volume*duckLevel));
+const shouldPlay=()=>!muted&&!S.finale&&(S.clock.running||!!S.court);
+players.forEach((p,k)=>{
+  p.addEventListener('error',()=>{if(k===cur&&p.getAttribute('src')){audioOk=false;syncAudio();render();broadcast();}});
+  p.addEventListener('canplay',()=>{if(k===cur&&!audioOk){audioOk=true;syncAudio();render();}});
+  p.addEventListener('timeupdate',()=>{if(k!==cur||p.paused)return;const d=p.duration;if(isFinite(d)&&d-p.currentTime<0.2)advance(false);});
+  p.addEventListener('ended',()=>{if(k===cur)advance(false);});
+});
+function advance(now){if(advancing)return;advancing=true;const old=players[cur];cur=1-cur;mus.i=(mus.i+1)%TRACKS.length;mus.t=0;
+  const nx=players[cur];prep(nx,mus.i);try{nx.currentTime=0}catch(e){}
+  if(shouldPlay()&&audioOk){nx.volume=vol();nx.play().catch(()=>{});}
+  setTimeout(()=>{old.pause();prep(old,mus.i+1);advancing=false;},now?0:350);saveMus();render();broadcast();}
+function nextTrack(){advance(true);}
+function musicReset(){players.forEach(p=>p.pause());cur=0;mus={i:0,t:0};saveMus();prep(players[0],0);prep(players[1],1);try{players[0].currentTime=0}catch(e){}startedOnce=true;}
 function syncAudio(){
   if(isCtl)return;
-  const playing=S.clock.running&&!S.finale&&!muted;
-  audio.volume=Math.max(0,Math.min(1,S.cfg.volume));
-  if(ac&&master)master.gain.setTargetAtTime(muted?0:S.cfg.volume,ac.currentTime,.1);
-  if(audioReady){
-    amb.stop();
-    if(playing){let t=elapsed()/1000;const d=audio.duration;if(isFinite(d)&&d>0)t%=d;
-      if(audio.paused){if(playPending)return;try{audio.currentTime=t}catch(e){}playPending=true;
-        audio.play().then(()=>{playPending=false;needGesture=false;render();}).catch(()=>{playPending=false;needGesture=true;render();});}
-      else if(Math.abs(audio.currentTime-t)>2){try{audio.currentTime=t}catch(e){}}}
-    else if(!audio.paused)audio.pause();
-  }else{
-    if(playing&&S.cfg.ambient)amb.start();else amb.stop();
-  }
+  if(ac&&master)master.gain.setTargetAtTime(muted?0:Math.max(.05,S.cfg.volume),ac.currentTime,.1);
+  const play=shouldPlay();
+  if(audioOk){
+    amb.stop();const p=players[cur];
+    if(play){if(p.paused&&!playPending&&!advancing){
+        if(!startedOnce){startedOnce=true;try{if(mus.t>0)p.currentTime=mus.t}catch(e){}}
+        p.volume=vol();playPending=true;
+        p.play().then(()=>{playPending=false;needGesture=false;render();}).catch(err=>{playPending=false;if(err&&err.name==='NotAllowedError')needGesture=true;render();});}}
+    else players.forEach(x=>{if(!x.paused)x.pause();});
+  }else{if(play&&S.cfg.ambient)amb.start();else amb.stop();}
+  if(S.court&&S.court.bell&&!muted)bell.start();else bell.stop();
 }
+/* smooth ducking: music drops to DUCK while a trial is on */
+setInterval(()=>{if(isCtl)return;const target=S.court?DUCK:1;if(Math.abs(duckLevel-target)>.005){duckLevel+= (target-duckLevel)*.18;}else duckLevel=target;
+  players.forEach(p=>{if(!p.paused)p.volume=vol();});if(amb.on&&amb.g&&ac)amb.g.gain.setTargetAtTime(.55*duckLevel,ac.currentTime,.1);
+  if(!players[cur].paused){mus.t=players[cur].currentTime;}},60);
+
 let ac=null,master=null;
-function ctx(){if(!ac){try{ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:S.cfg.volume;master.connect(ac.destination);}catch(e){return null}}
+function ctx(){if(!ac){try{ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:Math.max(.05,S.cfg.volume);master.connect(ac.destination);}catch(e){return null}}
   if(ac.state==='suspended')ac.resume().catch(()=>{});return ac;}
-function ringBell(times){
-  if(isCtl)return;const a=ctx();if(!a)return;const t0=a.currentTime+.05,f0=174.6;
-  const P=[[.5,.5,9],[1,1,6],[1.19,.45,4],[1.56,.35,3],[2,.5,3.5],[2.51,.25,2],[3.01,.2,1.6],[4.1,.12,1]];
-  for(let i=0;i<times;i++){const t=t0+i*2.4;P.forEach(([r,g,d])=>{const o=a.createOscillator(),v=a.createGain();o.type='sine';o.frequency.value=f0*r;
-    v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(g*.32,t+.008);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(v).connect(master);o.start(t);o.stop(t+d+.1);});}
-}
+/* one bell strike: inharmonic partials plus a short metallic click so it cuts through the music */
+function strike(dest,t,f0,amp){const a=ac;
+  [[.5,.35,5],[1,1,3.2],[1.19,.4,2.4],[1.5,.3,2],[2,.55,2.2],[2.51,.25,1.4],[3.01,.22,1.1],[4.16,.14,.7]].forEach(([r,g,d])=>{
+    const o=a.createOscillator(),v=a.createGain();o.type='sine';o.frequency.value=f0*r;
+    v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(g*amp,t+.004);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(v).connect(dest);o.start(t);o.stop(t+d+.05);});
+  const n=a.createBufferSource(),buf=a.createBuffer(1,a.sampleRate*.05,a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*(1-i/ch.length);
+  const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=3000;const ng=a.createGain();ng.gain.value=.25*amp;n.buffer=buf;n.connect(hp).connect(ng).connect(dest);n.start(t);}
+const bell={on:false,
+  start(){if(this.on)return;const a=ctx();if(!a)return;this.on=true;this.g=a.createGain();this.g.gain.value=1;this.g.connect(master);this.next=a.currentTime+.05;this.n=0;this.sched();this.timer=setInterval(()=>this.sched(),80);},
+  sched(){const a=ac;while(this.next<a.currentTime+.3){strike(this.g,this.next,this.n%2?349.2:440,.42);this.next+=this.n%2?1.1:0.55;this.n++;}},
+  stop(){if(!this.on)return;this.on=false;clearInterval(this.timer);const a=ac,g=this.g;g.gain.cancelScheduledValues(a.currentTime);g.gain.setValueAtTime(g.gain.value,a.currentTime);g.gain.linearRampToValueAtTime(0,a.currentTime+.5);setTimeout(()=>{try{g.disconnect()}catch(e){}},700);}};
+function ringBell(times){if(isCtl)return;const a=ctx();if(!a)return;for(let i=0;i<times*2;i++)strike(master,a.currentTime+.05+i*.82,i%2?349.2:440,.42);}
+/* fallback mood music if the loop files cannot be found */
 const SEQ=[69,72,76,81,80,76,72,71, 65,69,72,77,76,72,69,68, 62,65,69,74,72,69,65,64, 64,68,71,76,74,71,68,null];
-const amb={on:false,
+const amb={on:false,i:0,
   start(){if(this.on)return;const a=ctx();if(!a)return;this.on=true;this.g=a.createGain();this.g.gain.setValueAtTime(0,a.currentTime);this.g.gain.linearRampToValueAtTime(.55,a.currentTime+2.5);this.g.connect(master);
     const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=280;lp.connect(this.g);
     this.dr=[55,55.35,82.4].map(f=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.value=f;const g=a.createGain();g.gain.value=.045;o.connect(g).connect(lp);o.start();return o;});
     this.next=a.currentTime+.2;this.timer=setInterval(()=>this.sched(),100);},
   sched(){const a=ac;while(this.next<a.currentTime+.3){const m=SEQ[this.i%SEQ.length];if(m!=null)this.note(m,this.next);this.next+=.44;this.i++;}},
-  i:0,
   note(m,t){const a=ac,f=440*Math.pow(2,(m-69)/12)*Math.pow(2,((Math.random()-.5)*16)/1200);
     [[1,'triangle',.16,1.7],[2,'sine',.05,.9],[3,'sine',.025,.5]].forEach(([h,ty,amp,d])=>{const o=a.createOscillator(),v=a.createGain();o.type=ty;o.frequency.value=f*h;
       v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(amp,t+.005);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(v).connect(this.g);o.start(t);o.stop(t+d+.05);});},
@@ -521,25 +537,15 @@ const amb={on:false,
     g.gain.cancelScheduledValues(a.currentTime);g.gain.setValueAtTime(g.gain.value,a.currentTime);g.gain.linearRampToValueAtTime(0,a.currentTime+.8);
     setTimeout(()=>{dr.forEach(o=>{try{o.stop()}catch(e){}});try{g.disconnect()}catch(e){}},1000);}
 };
-document.addEventListener('pointerdown',()=>{if(isCtl)return;if(ac)ctx();if(needGesture){needGesture=false;syncAudio();render();}},true);
-
-/* IndexedDB: remember the chosen sound file between reloads */
-function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open('killmas',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e)}});}
-async function idbPut(file){try{const db=await idb();db.transaction('f','readwrite').objectStore('f').put({blob:file,name:file.name},'audio');}catch(e){}}
-async function idbDel(){try{const db=await idb();db.transaction('f','readwrite').objectStore('f').delete('audio');}catch(e){}}
-async function idbGet(){try{const db=await idb();return await new Promise(r=>{const q=db.transaction('f').objectStore('f').get('audio');q.onsuccess=()=>r(q.result||null);q.onerror=()=>r(null);});}catch(e){return null}}
-if(!isCtl){idbGet().then(rec=>{
-  if(rec&&rec.blob){const f=rec.blob instanceof File?rec.blob:new File([rec.blob],rec.name||'ljudfil');loadAudioFile(f,false);audioName=rec.name||f.name;}
-  else if(location.protocol==='file:'){audioName='domstol.mp3 (från mappen)';audio.src='domstol.mp3';audio.load();}
-});}
+document.addEventListener('pointerdown',()=>{if(isCtl)return;ctx();if(needGesture){needGesture=false;syncAudio();render();}},true);
 
 /* ---------- control window link ---------- */
 const ctls=new Set();
-function audioInfo(){return{name:audioName,ready:audioReady,muted,needGesture};}
+function audioInfo(){const p=players[cur];return{track:TRACKS[mus.i].name,ok:audioOk,muted,needGesture,t:p.currentTime||0,d:p.duration||0};}
 function broadcast(){if(isCtl)return;for(const w of ctls){try{if(w.closed){ctls.delete(w);continue;}w.postMessage({kmas:'state',S,audio:audioInfo()},'*');}catch(e){ctls.delete(w);}}}
 window.addEventListener('message',ev=>{const d=ev.data;if(!d||!d.kmas)return;
   if(!isCtl){if(d.kmas==='hello'&&ev.source){ctls.add(ev.source);ev.source.postMessage({kmas:'state',S,audio:audioInfo()},'*');}
-    else if(d.kmas==='act')reduce(d.a);else if(d.kmas==='audio')loadAudioFile(d.file);}
+    else if(d.kmas==='act')reduce(d.a);}
   else if(d.kmas==='state'){S=d.S;remote=d.audio;render();}
 });
 if(isCtl){try{window.opener.postMessage({kmas:'hello'},'*')}catch(e){}}
@@ -593,7 +599,7 @@ function render(){
   const ct=$('court');ct.hidden=!S.court;
   if(S.court){const left=S.cfg.discuss*60000-(now-S.court.startedAt),frac=Math.max(0,left)/(S.cfg.discuss*60000);
     set('cEyebrow',S.court.k==null?'Emergency trial':(S.court.final?'The final trial':`Trial ${S.court.k} of ${S.court.n}`));
-    set('cClock',fmt(rem));
+    set('cClock',fmt(rem));set('cBellTxt',S.court.bell?'Stoppa klockan':'Ring klockan igen');document.querySelector('.bellicon').classList.toggle('still',!S.court.bell);
     const argue=left>0;$('cRing').hidden=!argue;$('cDom').hidden=argue;
     set('cTitle',argue?(S.court.final?'Sixty minutes. The last bell has rung.':'The bell tolls. Come to the tree.'):'One, two, three…');
     set('cTime',fmtShort(left));$('cArc').style.strokeDashoffset=String(282.74*(1-frac));
@@ -619,10 +625,10 @@ function render(){
     set('pState',S.court?'Domstol pågår':S.blackout?'Strömavbrott':S.finale?'Slutskärm visas':{run:'Spelet pågår',up:'Tiden är ute',wait:'Väntar på start',pause:'Pausad'}[state]);
     set('pToggle',S.clock.running?'Pausa':(e===0?'Starta spelet':(e>=T?'Tiden är ute':'Fortsätt')));
     set('pDead',String(c.dead));set('pFoll',String(c.followers));set('pGift',String(c.presents));
-    const nm=ai?ai.name:'';set('pFile',nm?(nm+(ai.ready?'':' (laddar eller saknas)')):'Ingen ljudfil vald. Inbyggd stämningsmusik spelas i stället.');
+    set('pTrack',ai?ai.track+(ai.ok?'':' (filen hittas inte)'):'–');set('pTrackT',ai&&ai.d?fmtShort(ai.t*1000)+' / '+fmtShort(ai.d*1000):'');
     set('pMute',ai&&ai.muted?'Slå på ljud':'Stäng av ljud');
     syncField('cfgPause','checked',S.cfg.pauseCourt);syncField('cfgAmb','checked',S.cfg.ambient);
-    syncField('cfgVol','value',String(S.cfg.volume));syncField('cfgBell','value',S.cfg.bell);
+    syncField('cfgVol','value',String(S.cfg.volume));
     syncField('cfgTotal','value',String(S.cfg.total));syncField('cfgIv','value',String(S.cfg.interval));syncField('cfgDisc','value',String(S.cfg.discuss));
     syncField('cfgFoll','value',String(S.cfg.followers));syncField('cfgGoal','value',String(S.cfg.goal));
   }
@@ -640,7 +646,7 @@ setInterval(()=>{
   if(S.blackout&&now>S.blackout.until){S.blackout=null;ch=true;}
   if(ch)commit();else{render();if(S.clock.running)syncAudio();}
 },200);
-setInterval(()=>{if(!isCtl)broadcast();},2000);
+setInterval(()=>{if(!isCtl){broadcast();saveMus();}},2000);
 
 /* ---------- inputs ---------- */
 document.addEventListener('click',ev=>{const t=ev.target.closest('[data-a]');if(!t)return;try{dispatch(JSON.parse(t.dataset.a))}catch(e){}});
@@ -656,10 +662,8 @@ const num=(id,key,min,max)=>$(id).addEventListener('change',ev=>{let v=parseInt(
 num('cfgTotal','total',5,180);num('cfgIv','interval',1,60);num('cfgDisc','discuss',1,10);num('cfgFoll','followers',1,10);num('cfgGoal','goal',1,40);
 $('cfgPause').addEventListener('change',ev=>dispatch({t:'cfg',p:{pauseCourt:ev.target.checked}}));
 $('cfgAmb').addEventListener('change',ev=>dispatch({t:'cfg',p:{ambient:ev.target.checked}}));
-$('cfgBell').addEventListener('change',ev=>dispatch({t:'cfg',p:{bell:ev.target.value}}));
 $('cfgVol').addEventListener('input',ev=>dispatch({t:'cfg',p:{volume:parseFloat(ev.target.value)}}));
-$('audioFile').addEventListener('change',ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;
-  if(isCtl){try{window.opener.postMessage({kmas:'audio',file:f},'*');toast('Ljudfilen skickad till tavlan');}catch(e){}}else loadAudioFile(f);ev.target.value='';});
+$('cBellBtn').addEventListener('click',()=>{if(S.court)dispatch({t:S.court.bell?'bellStop':'bellStart'});});
 function togglePanel(force){const p=$('panel');if(isCtl)return;p.hidden=force!=null?!force:!p.hidden;render();}
 $('gear').addEventListener('click',()=>togglePanel(true));
 $('closePanel').addEventListener('click',()=>isCtl?window.close():togglePanel(false));
@@ -691,5 +695,4 @@ render();
 })();
 </script>
 
-</body>
-</html>
+</body></html>
