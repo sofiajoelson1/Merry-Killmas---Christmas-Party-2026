@@ -265,13 +265,13 @@ body.ctl #app{display:block;padding:0}
 
     <section class="tallies">
       <article class="tally dead" id="tDead" style="--fl:#a8bcd9">
-        <div class="num frac"><span id="nDead">20</span><span class="of">/<span id="nElves">20</span></span></div>
+        <div class="num frac"><span id="nDead">25</span><span class="of">/<span id="nElves">25</span></span></div>
         <h2>Elves still standing</h2>
         <p class="ghosts" id="ghostTxt">No ghosts yet. Keep your bow close.</p>
         <div class="adj"><button class="gm plus" type="button" aria-label="En nisse har dött" data-a='{"t":"count","k":"dead","d":1}'>+</button><button class="gm" type="button" aria-label="Ångra en död nisse" data-a='{"t":"count","k":"dead","d":-1}'>−</button></div>
       </article>
       <article class="tally foll" id="tFoll" style="--fl:#d01f33">
-        <div class="num frac"><span id="nFoll">4</span><span class="of">/<span id="nFollTot">4</span></span></div>
+        <div class="num frac"><span id="nFoll">5</span><span class="of">/<span id="nFollTot">5</span></span></div>
         <h2>Followers still at large</h2>
         <div class="icons horns" id="iFoll"></div>
         <div class="adj"><button class="gm plus" type="button" aria-label="Lägg tillbaka en tjänare" data-a='{"t":"count","k":"followers","d":1}'>+</button><button class="gm" type="button" aria-label="En tjänare utröstad" data-a='{"t":"count","k":"followers","d":-1}'>−</button></div>
@@ -322,8 +322,8 @@ body.ctl #app{display:block;padding:0}
         <button class="gm plus" type="button" id="sPlus" aria-label="En spelare till">+</button>
       </div>
       <div class="split">
-        <div class="se"><b id="sElves">20</b><span>nissar</span></div>
-        <div class="sf"><b id="sFoll">4</b><span>av Bockens tjänare</span>
+        <div class="se"><b id="sElves">25</b><span>nissar</span></div>
+        <div class="sf"><b id="sFoll">5</b><span>av Bockens tjänare</span>
           <div class="mini"><button class="gm" type="button" id="sFMinus" aria-label="En tjänare färre">−</button><button class="gm" type="button" id="sFPlus" aria-label="En tjänare till">+</button></div></div>
       </div>
       <p class="hint">Var sjätte spelare blir tjänare till Bocken. Justera om ni vill.</p>
@@ -371,7 +371,7 @@ body.ctl #app{display:block;padding:0}
 
     <h3>Räknare</h3>
     <div class="ctr"><span>Döda nissar</span><button class="btn" type="button" aria-label="Minska döda" data-a='{"t":"count","k":"dead","d":-1}'>−</button><span class="v" id="pDead">0</span><button class="btn" type="button" aria-label="Öka döda" data-a='{"t":"count","k":"dead","d":1}'>+</button></div>
-    <div class="ctr"><span>Tjänare kvar</span><button class="btn" type="button" aria-label="Minska tjänare" data-a='{"t":"count","k":"followers","d":-1}'>−</button><span class="v" id="pFoll">4</span><button class="btn" type="button" aria-label="Öka tjänare" data-a='{"t":"count","k":"followers","d":1}'>+</button></div>
+    <div class="ctr"><span>Tjänare kvar</span><button class="btn" type="button" aria-label="Minska tjänare" data-a='{"t":"count","k":"followers","d":-1}'>−</button><span class="v" id="pFoll">5</span><button class="btn" type="button" aria-label="Öka tjänare" data-a='{"t":"count","k":"followers","d":1}'>+</button></div>
     <div class="ctr"><span>Guldpaket</span><button class="btn" type="button" aria-label="Minska guldpaket" data-a='{"t":"count","k":"presents","d":-1}'>−</button><span class="v" id="pGift">0</span><button class="btn" type="button" aria-label="Öka guldpaket" data-a='{"t":"count","k":"presents","d":1}'>+</button></div>
 
     <h3>Domstol</h3>
@@ -427,7 +427,7 @@ body.ctl #app{display:block;padding:0}
 (()=>{
 const $=id=>document.getElementById(id);
 const KEY='killmas-board-v1';
-const DEF={total:60,interval:15,discuss:3,players:24,followers:4,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto'};
+const DEF={total:60,interval:15,discuss:3,players:30,followers:5,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto'};
 const isCtl=location.hash==='#control'&&!!window.opener;
 const follFor=n=>Math.max(1,Math.floor(n/6));
 const elvesN=()=>Math.max(1,S.cfg.players-S.cfg.followers);
@@ -706,7 +706,7 @@ num('cfgTotal','total',5,180);num('cfgIv','interval',1,60);num('cfgDisc','discus
 $('cfgPause').addEventListener('change',ev=>dispatch({t:'cfg',p:{pauseCourt:ev.target.checked}}));
 $('cfgAmb').addEventListener('change',ev=>dispatch({t:'cfg',p:{ambient:ev.target.checked}}));
 $('cfgVol').addEventListener('input',ev=>dispatch({t:'cfg',p:{volume:parseFloat(ev.target.value)}}));
-let sv={p:24,f:4};
+let sv={p:30,f:5};
 function setupVals(p,f){p=Math.max(3,Math.min(120,p|0||3));f=Math.max(1,Math.min(20,p-1,f|0||1));sv={p,f};
   if(document.activeElement!==$('sPlayers')||+$('sPlayers').value!==p)$('sPlayers').value=p;$('sFoll').textContent=f;$('sElves').textContent=p-f;}
 $('sPlayers').addEventListener('input',ev=>{const v=parseInt(ev.target.value,10);if(isNaN(v))return;const p=Math.max(3,Math.min(120,v));sv={p,f:Math.min(20,p-1,follFor(p))};$('sFoll').textContent=sv.f;$('sElves').textContent=p-sv.f;});
