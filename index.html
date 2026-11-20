@@ -299,7 +299,7 @@ body.ctl #app{display:block;padding:0}
       <h2 id="cTitle">The bell tolls. Come to the tree.</h2>
       <div class="ring" id="cRing">
         <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="#2b3243" stroke-width="5"/><circle id="cArc" cx="50" cy="50" r="45" fill="none" stroke="#e4b45c" stroke-width="5" stroke-linecap="round" stroke-dasharray="282.74" stroke-dashoffset="0"/></svg>
-        <div class="rt"><b id="cTime">3:00</b><span>to argue</span></div>
+        <div class="rt"><b id="cTime">4:00</b><span>to argue</span></div>
       </div>
       <p class="dom" id="cDom" hidden>Judge!</p>
       <p class="hint" id="cHint">No kills, no sabotage, nothing moves until the trial is over. Ghosts stay silent.</p>
@@ -427,7 +427,7 @@ body.ctl #app{display:block;padding:0}
 (()=>{
 const $=id=>document.getElementById(id);
 const KEY='killmas-board-v1';
-const DEF={total:60,interval:15,discuss:3,players:30,followers:5,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto'};
+const DEF={total:60,interval:15,discuss:4,players:30,followers:5,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto',v:2};
 const isCtl=location.hash==='#control'&&!!window.opener;
 const follFor=n=>Math.max(1,Math.floor(n/6));
 const elvesN=()=>Math.max(1,S.cfg.players-S.cfg.followers);
@@ -435,7 +435,7 @@ if(isCtl){document.body.classList.add('ctl');$('panel').hidden=false;}
 
 function fresh(cfg){cfg={...DEF,...(cfg||{})};return{cfg,clock:{running:false,base:0,since:0},counts:{dead:0,followers:cfg.followers,presents:0},courts:[],court:null,blackout:null,finale:null,setup:false,ready:false};}
 let S=fresh();
-if(!isCtl){try{const raw=localStorage.getItem(KEY);if(raw){const p=JSON.parse(raw);S={...fresh(p.cfg),...p,cfg:{...DEF,...p.cfg}};}}catch(e){}}
+if(!isCtl){try{const raw=localStorage.getItem(KEY);if(raw){const p=JSON.parse(raw);if(p.cfg&&!(p.cfg.v>=2))p.cfg={...p.cfg,discuss:4,v:2};S={...fresh(p.cfg),...p,cfg:{...DEF,...p.cfg}};}}catch(e){}}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 
 const totalMs=()=>S.cfg.total*60000, ivMs=()=>S.cfg.interval*60000;
