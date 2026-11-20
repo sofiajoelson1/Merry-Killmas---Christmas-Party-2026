@@ -111,8 +111,12 @@ body.soon .next b{color:var(--ribbon);animation:pulse 1s ease-in-out infinite}
 .tally .sub{margin:.2rem 0 0;font-size:1.15rem;color:var(--muted);font-style:italic}
 .tally.dead .num{color:var(--frost);text-shadow:0 0 1.5rem rgba(168,188,217,.35)}
 .tally.foll .num{color:var(--ribbon);text-shadow:0 0 1.5rem rgba(208,31,51,.45)}
-.tally.gift .num{color:var(--straw);text-shadow:0 0 1.5rem rgba(228,180,92,.4);font-size:4.6rem}
-.tally.gift .num .of{font-size:.42em;color:var(--straw-dim);margin-left:.1em}
+.tally.gift .num{color:var(--straw);text-shadow:0 0 1.5rem rgba(228,180,92,.4)}
+.tally .num.frac{font-size:4.6rem}
+.tally .num .of{font-size:.42em;color:var(--muted);margin-left:.1em;text-shadow:none}
+.tally.gift .num .of{color:var(--straw-dim)}
+.icons.horns.many{gap:.35rem}
+.icons.horns.many svg{width:1.9rem;height:1.9rem}
 .icons{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
 .icons svg{width:1.6rem;height:1.6rem;flex:none;transition:opacity .4s,transform .4s}
 .icons.horns{gap:.6rem}
@@ -150,6 +154,25 @@ body.soon .next b{color:var(--ribbon);animation:pulse 1s ease-in-out infinite}
 #court .hint{font-size:1.5rem;color:var(--muted);font-style:italic;margin:.6rem 0 0;max-width:52rem}
 #court .gameclock{position:absolute;top:1.5rem;right:max(16px,env(safe-area-inset-right,0px));font-family:var(--f-ui);font-size:1rem;color:var(--muted);letter-spacing:.1em}
 #court .gameclock b{font-family:var(--f-num);color:var(--straw);font-size:1.6rem;margin-left:.5rem}
+#setup{background:radial-gradient(ellipse at 50% 40%,rgba(27,33,48,.96),rgba(5,6,10,.98) 70%);z-index:35}
+#setup .inner{display:grid;justify-items:center;gap:1rem;max-width:64rem}
+#setup .eyebrow{font-family:var(--f-ui);letter-spacing:.3em;text-transform:uppercase;font-size:1.1rem;color:var(--frost);margin:0}
+#setup h2{font-family:var(--f-display);font-weight:400;font-size:6rem;text-wrap:balance;line-height:.95;margin:0;color:var(--straw);text-shadow:0 0 2rem rgba(228,180,92,.4)}
+.stepper{display:flex;align-items:center;gap:1.4rem;margin-top:.6rem}
+.stepper .gm{width:5rem;height:5rem;padding:0;justify-content:center;border-radius:50%;font-size:2.8rem;font-weight:500;line-height:1}
+.stepper input{width:2.3ch;text-align:center;font-family:var(--f-num);font-weight:800;font-size:8rem;line-height:1;color:var(--ink);background:transparent;border:0;border-bottom:2px solid var(--line);padding:0;-moz-appearance:textfield;appearance:textfield}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.stepper input:focus{outline:none;border-bottom-color:var(--straw)}
+.split{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+.split>div{display:grid;justify-items:center;gap:.2rem;min-width:15rem;padding:1rem 1.6rem;border:1px solid var(--line);border-radius:.9rem;background:rgba(19,23,34,.8)}
+.split b{font-family:var(--f-num);font-weight:800;font-size:4rem;line-height:1}
+.split span{font-size:1.4rem;color:var(--muted);font-style:italic}
+.split .se b{color:var(--frost)} .split .sf b{color:var(--ribbon)}
+.split .sf .mini{display:flex;gap:.5rem;margin-top:.3rem}
+.stepper input::selection{background:rgba(228,180,92,.35)}
+.split .sf .mini .gm{width:2.6rem;height:2.6rem;padding:0;justify-content:center;border-radius:50%;font-size:1.4rem}
+#setup .hint{font-size:1.4rem;color:var(--muted);font-style:italic;margin:0}
+#setup .gm.go{font-size:1.4rem;padding:1rem 2.4rem;min-width:14rem}
 #blackout{background:#000;z-index:30}
 #blackout p{font-family:var(--f-num);color:#3a0a10;font-size:3rem;margin:0}
 #blackout small{display:block;font-family:var(--f-ui);font-size:.9rem;letter-spacing:.3em;color:#2a0a0e;text-transform:uppercase}
@@ -242,19 +265,19 @@ body.ctl #app{display:block;padding:0}
 
     <section class="tallies">
       <article class="tally dead" id="tDead" style="--fl:#a8bcd9">
-        <div class="num" id="nDead">0</div>
-        <h2>Fallen elves</h2>
+        <div class="num frac"><span id="nDead">20</span><span class="of">/<span id="nElves">20</span></span></div>
+        <h2>Elves still standing</h2>
         <p class="ghosts" id="ghostTxt">No ghosts yet. Keep your bow close.</p>
-        <div class="adj"><button class="gm plus" type="button" aria-label="En nisse till har dött" data-a='{"t":"count","k":"dead","d":1}'>+</button><button class="gm" type="button" aria-label="Ta bort en död nisse" data-a='{"t":"count","k":"dead","d":-1}'>−</button></div>
+        <div class="adj"><button class="gm plus" type="button" aria-label="En nisse har dött" data-a='{"t":"count","k":"dead","d":1}'>+</button><button class="gm" type="button" aria-label="Ångra en död nisse" data-a='{"t":"count","k":"dead","d":-1}'>−</button></div>
       </article>
       <article class="tally foll" id="tFoll" style="--fl:#d01f33">
-        <div class="num" id="nFoll">4</div>
-        <h2>Followers of the Goat</h2>
+        <div class="num frac"><span id="nFoll">4</span><span class="of">/<span id="nFollTot">4</span></span></div>
+        <h2>Followers still at large</h2>
         <div class="icons horns" id="iFoll"></div>
         <div class="adj"><button class="gm plus" type="button" aria-label="Lägg tillbaka en tjänare" data-a='{"t":"count","k":"followers","d":1}'>+</button><button class="gm" type="button" aria-label="En tjänare utröstad" data-a='{"t":"count","k":"followers","d":-1}'>−</button></div>
       </article>
       <article class="tally gift" id="tGift" style="--fl:#e4b45c">
-        <div class="num"><span id="nGift">0</span><span class="of">/<span id="nGoal">20</span></span></div>
+        <div class="num frac"><span id="nGift">0</span><span class="of">/<span id="nGoal">20</span></span></div>
         <h2>Gold under the tree</h2>
         <div class="icons gifts" id="iGift"></div>
         <div class="adj"><button class="gm plus" type="button" aria-label="Ett guldpaket till under granen" data-a='{"t":"count","k":"presents","d":1}'>+</button><button class="gm" type="button" aria-label="Ta bort ett guldpaket" data-a='{"t":"count","k":"presents","d":-1}'>−</button></div>
@@ -287,6 +310,28 @@ body.ctl #app{display:block;padding:0}
         <button class="gm" type="button" data-a='{"t":"courtEnd"}'>Ingen utröstad</button>
       </div>
     </div>
+  </div>
+
+  <div class="ov" id="setup" hidden>
+    <form class="inner" id="setupForm">
+      <p class="eyebrow">Innan jakten börjar</p>
+      <h2>Hur många spelar?</h2>
+      <div class="stepper">
+        <button class="gm" type="button" id="sMinus" aria-label="En spelare färre">−</button>
+        <input id="sPlayers" type="number" inputmode="numeric" min="3" max="120" aria-label="Antal spelare">
+        <button class="gm plus" type="button" id="sPlus" aria-label="En spelare till">+</button>
+      </div>
+      <div class="split">
+        <div class="se"><b id="sElves">20</b><span>nissar</span></div>
+        <div class="sf"><b id="sFoll">4</b><span>av Bockens tjänare</span>
+          <div class="mini"><button class="gm" type="button" id="sFMinus" aria-label="En tjänare färre">−</button><button class="gm" type="button" id="sFPlus" aria-label="En tjänare till">+</button></div></div>
+      </div>
+      <p class="hint">Var sjätte spelare blir tjänare till Bocken. Justera om ni vill.</p>
+      <div class="ovbtns">
+        <button class="gm go" type="submit">Starta spelet</button>
+        <button class="gm" type="button" data-a='{"t":"setupCancel"}'>Avbryt</button>
+      </div>
+    </form>
   </div>
 
   <div class="ov" id="blackout" hidden><div><p id="boTime">60</p><small>The lights are out</small></div><button class="gm" type="button" data-a='{"t":"blackoutEnd"}'>Tänd igen</button></div>
@@ -362,7 +407,9 @@ body.ctl #app{display:block;padding:0}
     <div class="field"><label for="cfgTotal">Speltid (min)</label><input id="cfgTotal" type="number" min="5" max="180" step="5"></div>
     <div class="field"><label for="cfgIv">Domstol var (min)</label><input id="cfgIv" type="number" min="1" max="60"></div>
     <div class="field"><label for="cfgDisc">Diskussionstid (min)</label><input id="cfgDisc" type="number" min="1" max="10"></div>
-    <div class="field"><label for="cfgFoll">Antal tjänare</label><input id="cfgFoll" type="number" min="1" max="10"></div>
+    <div class="field"><label for="cfgPlayers">Antal spelare</label><input id="cfgPlayers" type="number" min="3" max="120"></div>
+    <div class="field"><label for="cfgFoll">Antal tjänare</label><input id="cfgFoll" type="number" min="1" max="20"></div>
+    <p class="muted">Ändrar du antal spelare räknas tjänarna om till var sjätte spelare. Resten är nissar.</p>
     <div class="field"><label for="cfgGoal">Guldpaket för vinst</label><input id="cfgGoal" type="number" min="1" max="40"></div>
 
     <h3>Skärm</h3>
@@ -380,11 +427,13 @@ body.ctl #app{display:block;padding:0}
 (()=>{
 const $=id=>document.getElementById(id);
 const KEY='killmas-board-v1';
-const DEF={total:60,interval:15,discuss:3,followers:4,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto'};
+const DEF={total:60,interval:15,discuss:3,players:24,followers:4,goal:20,pauseCourt:false,volume:0.8,ambient:true,bell:'auto'};
 const isCtl=location.hash==='#control'&&!!window.opener;
+const follFor=n=>Math.max(1,Math.floor(n/6));
+const elvesN=()=>Math.max(1,S.cfg.players-S.cfg.followers);
 if(isCtl){document.body.classList.add('ctl');$('panel').hidden=false;}
 
-function fresh(cfg){cfg={...DEF,...(cfg||{})};return{cfg,clock:{running:false,base:0,since:0},counts:{dead:0,followers:cfg.followers,presents:0},courts:[],court:null,blackout:null,finale:null};}
+function fresh(cfg){cfg={...DEF,...(cfg||{})};return{cfg,clock:{running:false,base:0,since:0},counts:{dead:0,followers:cfg.followers,presents:0},courts:[],court:null,blackout:null,finale:null,setup:false,ready:false};}
 let S=fresh();
 if(!isCtl){try{const raw=localStorage.getItem(KEY);if(raw){const p=JSON.parse(raw);S={...fresh(p.cfg),...p,cfg:{...DEF,...p.cfg}};}}catch(e){}}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
@@ -410,12 +459,17 @@ function reduce(a){
     case 'toggle':
       if(S.finale&&S.finale.who)return;
       if(S.clock.running)setClock(false,e);
-      else if(e<totalMs()){ctx();setClock(true,e);if(S.court&&S.court.resume)S.court=null;if(S.finale)S.finale=null;}
+      else if(e===0&&!S.ready&&!a.skip){ctx();S.setup=true;}
+      else if(e<totalMs()){ctx();S.ready=true;S.setup=false;setClock(true,e);if(S.court&&S.court.resume)S.court=null;if(S.finale)S.finale=null;}
       break;
     case 'reset':S=fresh(S.cfg);musicReset();break;
+    case 'setup':{const pl=Math.max(3,Math.min(120,a.players|0)),fo=Math.max(1,Math.min(20,pl-1,a.followers|0));
+      S.cfg.players=pl;S.cfg.followers=fo;S.counts.followers=fo;S.counts.dead=0;S.setup=false;S.ready=true;
+      if(e<totalMs()){ctx();setClock(true,e);}break;}
+    case 'setupCancel':if(!S.setup)return;S.setup=false;break;
     case 'adjust':{const ne=Math.max(0,Math.min(totalMs(),e+a.ms));setClock(S.clock.running&&ne<totalMs(),ne);
       S.courts=[];for(let k=1;k<=nCourts();k++)if(mark(k)<ne||(mark(k)===ne&&S.court&&S.court.k===k))S.courts.push(k);break;}
-    case 'count':{const c=S.counts,k=a.k,lim={dead:99,followers:S.cfg.followers,presents:S.cfg.goal}[k],before=c[k];
+    case 'count':{const c=S.counts,k=a.k,lim={dead:elvesN(),followers:S.cfg.followers,presents:S.cfg.goal}[k],before=c[k];
       c[k]=Math.max(0,Math.min(lim,c[k]+a.d));if(c[k]===before)return;
       bumps.add(k);
       if(k==='presents'&&before<lim&&c[k]>=lim)win('elves','presents');
@@ -424,14 +478,17 @@ function reduce(a){
     case 'court':startCourt(null);break;
     case 'courtEnd':{if(!S.court)return;const c=S.court;S.court=null;
       if(a.out==='followers'){const b=S.counts.followers;S.counts.followers=Math.max(0,b-1);if(S.counts.followers!==b){if(b>0&&S.counts.followers===0){win('elves','banished');break;}}}
-      if(a.out==='dead')S.counts.dead=Math.min(99,S.counts.dead+1);
+      if(a.out==='dead')S.counts.dead=Math.min(elvesN(),S.counts.dead+1);
       if(c.final)S.finale={who:null,why:'final'};else if(c.resume&&e<totalMs())setClock(true,e);break;}
     case 'blackout':S.blackout={until:now+60000};break;
     case 'blackoutEnd':S.blackout=null;break;
     case 'win':win(a.who,'gm');break;
     case 'finaleClose':S.finale=null;break;
-    case 'cfg':{const started=e>0||S.clock.running;Object.assign(S.cfg,a.p);
+    case 'cfg':{const started=e>0||S.clock.running;
+      if('players'in a.p&&!('followers'in a.p))a.p.followers=follFor(a.p.players);
+      Object.assign(S.cfg,a.p);S.cfg.followers=Math.min(S.cfg.followers,S.cfg.players-1);
       if('followers'in a.p&&!started)S.counts.followers=S.cfg.followers;
+      S.counts.dead=Math.min(S.counts.dead,elvesN());
       S.counts.followers=Math.min(S.counts.followers,S.cfg.followers);S.counts.presents=Math.min(S.counts.presents,S.cfg.goal);
       setClock(S.clock.running,Math.min(e,totalMs()));marksKey='';break;}
     case 'bell':ringBell(3);return;
@@ -444,7 +501,7 @@ function reduce(a){
   commit();
 }
 function commit(){save();syncAudio();render();broadcast();}
-const dispatch=a=>{if(isCtl){try{window.opener.postMessage({kmas:'act',a},'*')}catch(e){}}else reduce(a);};
+const dispatch=a=>{if(isCtl){if(a.t==='toggle')a={...a,skip:true};try{window.opener.postMessage({kmas:'act',a},'*')}catch(e){}}else reduce(a);};
 
 /* ---------- audio: three music loops in a fixed order, ducked during trials, bell on top ---------- */
 const TRACKS=[{src:'loop2-episk.mp3',name:'Loop 2 · Episk'},{src:'loop4-smyg-och-spaning.mp3',name:'Loop 4 · Smyg och spaning'},{src:'loop3-synthwave.mp3',name:'Loop 3 · Synthwave'}];
@@ -568,7 +625,8 @@ function render(){
   set('next',nxt,'innerHTML');
   b.classList.toggle('soon',!!(nk&&S.clock.running&&mark(nk)-e<=60000));
   /* counts */
-  set('nDead',String(c.dead));set('nFoll',String(c.followers));set('nGift',String(c.presents));set('nGoal',String(S.cfg.goal));
+  set('nDead',String(elvesN()-c.dead));set('nElves',String(elvesN()));set('nFoll',String(c.followers));set('nFollTot',String(S.cfg.followers));
+  $('iFoll').classList.toggle('many',S.cfg.followers>6);set('nGift',String(c.presents));set('nGoal',String(S.cfg.goal));
   set('ghostTxt',c.dead===0?'No ghosts yet. Keep your bow close.':(c.dead===1?'One elf now walks as a ghost.':`${c.dead} elves now walk as ghosts.`));
   icons($('iFoll'),S.cfg.followers,'gone','i-horns',i=>i>=c.followers);
   icons($('iGift'),S.cfg.goal,'got','i-gift',i=>i<c.presents);
@@ -586,6 +644,9 @@ function render(){
     set('cTitle',argue?(S.court.final?'Sixty minutes. The last bell has rung.':'The bell tolls. Come to the tree.'):'One, two, three…');
     set('cTime',fmtShort(left));$('cArc').style.strokeDashoffset=String(282.74*(1-frac));
     set('cHint',argue?'No kills, no sabotage, nothing moves until the trial is over. Ghosts stay silent.':'Everyone with a bow points at once. Most fingers reads their letter aloud.');}
+  /* setup */
+  const su=$('setup'),wasHidden=su.hidden;su.hidden=!S.setup||isCtl;
+  if(!su.hidden&&wasHidden){setupVals(S.cfg.players,follFor(S.cfg.players));setTimeout(()=>{try{$('sPlayers').focus();$('sPlayers').select()}catch(e){}},50);}
   /* blackout */
   $('blackout').hidden=!S.blackout;if(S.blackout)set('boTime',String(Math.max(0,Math.ceil((S.blackout.until-now)/1000))));
   /* finale */
@@ -612,7 +673,7 @@ function render(){
     syncField('cfgPause','checked',S.cfg.pauseCourt);syncField('cfgAmb','checked',S.cfg.ambient);
     syncField('cfgVol','value',String(S.cfg.volume));
     syncField('cfgTotal','value',String(S.cfg.total));syncField('cfgIv','value',String(S.cfg.interval));syncField('cfgDisc','value',String(S.cfg.discuss));
-    syncField('cfgFoll','value',String(S.cfg.followers));syncField('cfgGoal','value',String(S.cfg.goal));
+    syncField('cfgFoll','value',String(S.cfg.followers));syncField('cfgPlayers','value',String(S.cfg.players));syncField('cfgGoal','value',String(S.cfg.goal));
   }
 }
 function syncField(id,p,v){const el=$(id);if(document.activeElement===el)return;if(el[p]!==v)el[p]=v;}
@@ -641,10 +702,19 @@ $('bReset').addEventListener('click',()=>{const b=$('bReset');
   if(Date.now()-bResetArm<4000){bResetArm=0;b.textContent='Starta om spelet';b.classList.remove('bellb');dispatch({t:'reset'});toast('Spelet och timern är nollställda');}
   else{bResetArm=Date.now();b.textContent='Klicka igen för att starta om';b.classList.add('bellb');setTimeout(()=>{if(bResetArm&&Date.now()-bResetArm>=3900){bResetArm=0;b.textContent='Starta om spelet';b.classList.remove('bellb');}},4000);}});
 const num=(id,key,min,max)=>$(id).addEventListener('change',ev=>{let v=parseInt(ev.target.value,10);if(isNaN(v))return;v=Math.max(min,Math.min(max,v));dispatch({t:'cfg',p:{[key]:v}});});
-num('cfgTotal','total',5,180);num('cfgIv','interval',1,60);num('cfgDisc','discuss',1,10);num('cfgFoll','followers',1,10);num('cfgGoal','goal',1,40);
+num('cfgTotal','total',5,180);num('cfgIv','interval',1,60);num('cfgDisc','discuss',1,10);num('cfgFoll','followers',1,20);num('cfgPlayers','players',3,120);num('cfgGoal','goal',1,40);
 $('cfgPause').addEventListener('change',ev=>dispatch({t:'cfg',p:{pauseCourt:ev.target.checked}}));
 $('cfgAmb').addEventListener('change',ev=>dispatch({t:'cfg',p:{ambient:ev.target.checked}}));
 $('cfgVol').addEventListener('input',ev=>dispatch({t:'cfg',p:{volume:parseFloat(ev.target.value)}}));
+let sv={p:24,f:4};
+function setupVals(p,f){p=Math.max(3,Math.min(120,p|0||3));f=Math.max(1,Math.min(20,p-1,f|0||1));sv={p,f};
+  if(document.activeElement!==$('sPlayers')||+$('sPlayers').value!==p)$('sPlayers').value=p;$('sFoll').textContent=f;$('sElves').textContent=p-f;}
+$('sPlayers').addEventListener('input',ev=>{const v=parseInt(ev.target.value,10);if(isNaN(v))return;const p=Math.max(3,Math.min(120,v));sv={p,f:Math.min(20,p-1,follFor(p))};$('sFoll').textContent=sv.f;$('sElves').textContent=p-sv.f;});
+$('sMinus').addEventListener('click',()=>setupVals(sv.p-1,follFor(sv.p-1)));
+$('sPlus').addEventListener('click',()=>setupVals(sv.p+1,follFor(sv.p+1)));
+$('sFMinus').addEventListener('click',()=>setupVals(sv.p,sv.f-1));
+$('sFPlus').addEventListener('click',()=>setupVals(sv.p,sv.f+1));
+$('setupForm').addEventListener('submit',ev=>{ev.preventDefault();setupVals(+$('sPlayers').value||sv.p,sv.f);dispatch({t:'setup',players:sv.p,followers:sv.f});});
 $('cBellBtn').addEventListener('click',()=>{if(S.court)dispatch({t:S.court.bell?'bellStop':'bellStart'});});
 function togglePanel(force){const p=$('panel');if(isCtl)return;p.hidden=force!=null?!force:!p.hidden;render();}
 $('gear').addEventListener('click',()=>togglePanel(true));
