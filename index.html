@@ -268,7 +268,7 @@ body.ctl #app{display:block;padding:0}
         <div class="num frac"><span id="nDead">25</span><span class="of">/<span id="nElves">25</span></span></div>
         <h2>Elves still standing</h2>
         <p class="ghosts" id="ghostTxt">No ghosts yet. Keep your bow close.</p>
-        <div class="adj"><button class="gm plus" type="button" aria-label="En nisse har dött" data-a='{"t":"count","k":"dead","d":1}'>+</button><button class="gm" type="button" aria-label="Ångra en död nisse" data-a='{"t":"count","k":"dead","d":-1}'>−</button></div>
+        <div class="adj"><button class="gm plus" type="button" aria-label="En nisse tillbaka" data-a='{"t":"count","k":"dead","d":-1}'>+</button><button class="gm" type="button" aria-label="En nisse har dött" data-a='{"t":"count","k":"dead","d":1}'>−</button></div>
       </article>
       <article class="tally foll" id="tFoll" style="--fl:#d01f33">
         <div class="num frac"><span id="nFoll">5</span><span class="of">/<span id="nFollTot">5</span></span></div>
@@ -370,7 +370,7 @@ body.ctl #app{display:block;padding:0}
     </div>
 
     <h3>Räknare</h3>
-    <div class="ctr"><span>Döda nissar</span><button class="btn" type="button" aria-label="Minska döda" data-a='{"t":"count","k":"dead","d":-1}'>−</button><span class="v" id="pDead">0</span><button class="btn" type="button" aria-label="Öka döda" data-a='{"t":"count","k":"dead","d":1}'>+</button></div>
+    <div class="ctr"><span>Nissar kvar</span><button class="btn" type="button" aria-label="En nisse har dött" data-a='{"t":"count","k":"dead","d":1}'>−</button><span class="v" id="pDead">25</span><button class="btn" type="button" aria-label="En nisse tillbaka" data-a='{"t":"count","k":"dead","d":-1}'>+</button></div>
     <div class="ctr"><span>Tjänare kvar</span><button class="btn" type="button" aria-label="Minska tjänare" data-a='{"t":"count","k":"followers","d":-1}'>−</button><span class="v" id="pFoll">5</span><button class="btn" type="button" aria-label="Öka tjänare" data-a='{"t":"count","k":"followers","d":1}'>+</button></div>
     <div class="ctr"><span>Guldpaket</span><button class="btn" type="button" aria-label="Minska guldpaket" data-a='{"t":"count","k":"presents","d":-1}'>−</button><span class="v" id="pGift">0</span><button class="btn" type="button" aria-label="Öka guldpaket" data-a='{"t":"count","k":"presents","d":1}'>+</button></div>
 
@@ -667,7 +667,7 @@ function render(){
     set('pTime',fmt(rem));
     set('pState',S.court?'Domstol pågår':S.blackout?'Strömavbrott':S.finale?'Slutskärm visas':{run:'Spelet pågår',up:'Tiden är ute',wait:'Väntar på start',pause:'Pausad'}[state]);
     set('pToggle',S.clock.running?'Pausa':(e===0?'Starta spelet':(e>=T?'Tiden är ute':'Fortsätt')));
-    set('pDead',String(c.dead));set('pFoll',String(c.followers));set('pGift',String(c.presents));
+    set('pDead',String(elvesN()-c.dead));set('pFoll',String(c.followers));set('pGift',String(c.presents));
     set('pTrack',ai?ai.track+(ai.ok?'':' (filen hittas inte)'):'–');set('pTrackT',ai&&ai.d?fmtShort(ai.t*1000)+' / '+fmtShort(ai.d*1000):'');
     set('pMute',ai&&ai.muted?'Slå på ljud':'Stäng av ljud');
     syncField('cfgPause','checked',S.cfg.pauseCourt);syncField('cfgAmb','checked',S.cfg.ambient);
